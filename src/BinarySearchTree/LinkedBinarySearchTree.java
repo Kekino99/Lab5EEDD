@@ -28,16 +28,16 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V> {
             this.right = right;
         }
 
-        private boolean hasBothChild(){
+        private boolean hasBothChild() {
             return hasLeftChild() && hasRightChild();
         }
 
 
-        private boolean hasLeftChild(){
+        private boolean hasLeftChild() {
             return this.left != null;
         }
 
-        private boolean hasRightChild(){
+        private boolean hasRightChild() {
             return this.right != null;
         }
 
@@ -45,6 +45,7 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V> {
 
     /**
      * Returns a void LinkedBinaryTree
+     *
      * @param comparator comparator that will be used to store and search elements.
      */
     public LinkedBinarySearchTree(Comparator<K> comparator) {
@@ -54,7 +55,8 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V> {
 
     private LinkedBinarySearchTree(Comparator<K> comparator, Node<K, V> root) {
         this.comparator = comparator;
-        this.root = root;
+        this.root = new Node<>(null, null, root, null);
+        //The first node is to represent the void tree, s the left is the root of the actual tree.
     }
 
 
@@ -63,7 +65,7 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V> {
      */
     @Override
     public boolean isEmpty() {
-        return root.left==null;
+        return root.left == null;
     }
 
     /**
@@ -72,7 +74,7 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V> {
      */
     @Override
     public boolean containsKey(K key) {
-        return nodePosition(key).key!=null;
+        return nodePosition(key) != null;
 
     }
 
@@ -94,7 +96,7 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V> {
      */
     @Override
     public BinarySearchTree<K, V> put(K key, V value) {
-        return null;
+        return new LinkedBinarySearchTree<>(this.comparator, putting(root.left, key, value));
     }
 
     /**
@@ -105,23 +107,35 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V> {
      */
     @Override
     public BinarySearchTree<K, V> remove(K key) {
-        if(containsKey(key)){
+        if (containsKey(key)) {
             return new LinkedBinarySearchTree<>(comparator, removing(root.left, key));
         } else {
             return this;
         }
     }
 
+    private Node<K, V> putting(Node<K, V> node, K key, V value) {
+        if (node == null) {
+            return new Node<>(key, value, null, null);
+        } else if (node.key == key) {
+            return new Node<>(key, value, node.left, node.right);
+        } else if (comparator.compare(node.key, key) < 0) {
+            return new Node<>(node.key, node.value, putting(node.left, key, value), node.right);
+        } else {
+            return new Node<>(node.key, node.value, node.left, putting(node.right, key, value));
+        }
+    }
 
+    // Node exists, as it checks before calling the function.
     private Node<K, V> removing(Node<K, V> node, K key) {
-        if(node.key==key) {
-            if(node.hasBothChild()){
+        if (node.key == key) {
+            if (node.hasBothChild()) {
                 Node<K, V> maximum = maxOfNode(node.left);
                 Node<K, V> removed = removing(node.left, maximum.key);
                 return new Node<>(maximum.key, maximum.value, removed, node.right);
-            } else if(node.hasLeftChild()){
+            } else if (node.hasLeftChild()) {
                 return node.left;
-            } else if(node.hasRightChild()) {
+            } else if (node.hasRightChild()) {
                 return node.right;
             } else {
                 return null;
@@ -143,7 +157,7 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V> {
     private Node<K, V> nodePosition(K key) {
         Node<K, V> actual = navigate(root.left, key);
 
-        while(actual.key != key && actual.key != null){
+        while (actual != null && actual.key != key) {
             actual = navigate(actual, key);
         }
 
@@ -154,17 +168,18 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V> {
     /**
      * Compares the key with the node key and returns the nearest node of the left or right node.
      * Node.key must be different from key to work it out.
+     *
      * @param node the node that wants to be navigated
-     * @param key the key that is searched.
+     * @param key  the key that is searched.
      * @return returns the nearest node of the left or right node
      */
     private Node<K, V> navigate(Node<K, V> node, K key) {
         return (comparator.compare(node.key, key) < 0) ? root.left : root.right;
     }
 
-    private Node<K, V> maxOfNode(Node<K, V> node){
+    private Node<K, V> maxOfNode(Node<K, V> node) {
         Node<K, V> actual = node.right;
-        while(actual.right!=null){
+        while (actual.right != null) {
             actual = actual.right;
         }
         return actual;
