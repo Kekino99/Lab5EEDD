@@ -1,6 +1,11 @@
 package BinarySearchTree;
 
+import Stack.LinkedStack;
+
 import java.util.Comparator;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 
 /**
  * Makes a "unpermutable" binary search tree.
@@ -9,10 +14,93 @@ import java.util.Comparator;
  * @param <V> The value stored in the binary Tree. Both seen as a SQL parameters k would be the primary key and v would
  *            be the values associated with that key.
  */
-public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>, BinaryTree<Pair<K, V>> {
+public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>, BinaryTree<Pair<K, V>>, Iterable<Pair<K, V>> {
 
     private final Node<K, V> root;
     private final Comparator<K> comparator;
+
+    /**
+     * Returns an iterator over elements of type {@code T}.
+     *
+     * @return an Iterator.
+     */
+    @Override
+    public Iterator<Pair<K, V>> iterator() {
+        return new Iter();
+    }
+
+    private class Iter implements Iterator<Pair<K, V>> {
+        /* Self notes of the implementation:
+        * There is no need of a modCount as the class is not permutable
+        * Remove method is tricky, as the tree is unpermutable but it can be done
+        * with auxiliar methods -I think- , so it will be implemented.*/
+        //TODO final last check this comment to make sense with the code.
+        LinkedStack<Pair<LinkedBinarySearchTree<K, V>, Boolean>> stack;
+        Pair<K, V> lastReturned = null;
+
+        /**
+         * Returns {@code true} if the iteration has more elements.
+         * (In other words, returns {@code true} if {@link #next} would
+         * return an element rather than throwing an exception.)
+         *
+         * @return {@code true} if the iteration has more elements
+         */
+        @Override
+        public boolean hasNext() {
+            return !stack.isEmpty();
+        }
+
+        /**
+         * Returns the next element in the iteration.
+         *
+         * @return the next element in the iteration
+         * @throws NoSuchElementException if the iteration has no more elements
+         */
+        @Override
+        public Pair<K, V> next() throws NoSuchElementException{
+            while(hasNext()) {
+                Pair<LinkedBinarySearchTree<K, V>, Boolean> actual = stack.top();
+                stack.pop();
+                if(actual.second()) {
+                    return actual.first().root();
+                } else {
+                    stack.push(new Pair<>(actual.first().right(), false));
+                    stack.push(new Pair<>(actual.first(), true));
+                    stack.push(new Pair<>(actual.first().left(), false));
+                    //TODO solve as Inorder java class doc.
+                }
+            }
+            throw new NoSuchElementException();
+        }
+
+        /**
+         * Removes from the underlying collection the last element returned
+         * by this iterator (optional operation).  This method can be called
+         * only once per call to {@link #next}.
+         * <p>
+         * The behavior of an iterator is unspecified if the underlying collection
+         * is modified while the iteration is in progress in any way other than by
+         * calling this method, unless an overriding class has specified a
+         * concurrent modification policy.
+         * <p>
+         * The behavior of an iterator is unspecified if this method is called
+         * after a call to the {@link #forEachRemaining forEachRemaining} method.
+         *
+         * @throws UnsupportedOperationException if the {@code remove}
+         *                                       operation is not supported by this iterator
+         * @throws IllegalStateException         if the {@code next} method has not
+         *                                       yet been called, or the {@code remove} method has already
+         *                                       been called after the last call to the {@code next}
+         *                                       method
+         * @implSpec The default implementation throws an instance of
+         * {@link UnsupportedOperationException} and performs no other action.
+         */
+        @Override
+        public void remove() throws UnsupportedOperationException {
+            throw new UnsupportedOperationException();
+            //TODO remove operation
+        }
+    }
 
     private static class Node<K, V> {
         private final K key;
@@ -39,6 +127,17 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>, Bin
 
         private boolean hasRightChild() {
             return this.right != null;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if(obj instanceof Node) {
+                Node<K, V> node = (Node<K, V>) obj; //TODO solve as the equals of LBST.
+                return this.key == node.key && this.value == node.value
+                        && Objects.equals(this.left, node.left)
+                        && Objects.equals(this.right, node.right);
+            }
+            return false;
         }
 
     }
@@ -78,20 +177,22 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>, Bin
 
     /**
      * If searched a left child that doesn't exist casts a NullPointerException
+     *
      * @return the left child
      */
     @Override
     public LinkedBinarySearchTree<K, V> left() {
-        return new LinkedBinarySearchTree<>(this.comparator,root.left.left);
+        return new LinkedBinarySearchTree<>(this.comparator, root.left.left);
     }
 
     /**
      * If searched a right child that doesn't exist casts a NullPointerException
+     *
      * @return the right child
      */
     @Override
-    public LinkedBinarySearchTree<K, V>  right() {
-        return new LinkedBinarySearchTree<>(this.comparator,root.left.right);
+    public LinkedBinarySearchTree<K, V> right() {
+        return new LinkedBinarySearchTree<>(this.comparator, root.left.right);
     }
 
     /**
@@ -218,25 +319,25 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>, Bin
      * on non-null object references:
      * <ul>
      * <li>It is <i>reflexive</i>: for any non-null reference value
-     *     {@code x}, {@code x.equals(x)} should return
-     *     {@code true}.
+     * {@code x}, {@code x.equals(x)} should return
+     * {@code true}.
      * <li>It is <i>symmetric</i>: for any non-null reference values
-     *     {@code x} and {@code y}, {@code x.equals(y)}
-     *     should return {@code true} if and only if
-     *     {@code y.equals(x)} returns {@code true}.
+     * {@code x} and {@code y}, {@code x.equals(y)}
+     * should return {@code true} if and only if
+     * {@code y.equals(x)} returns {@code true}.
      * <li>It is <i>transitive</i>: for any non-null reference values
-     *     {@code x}, {@code y}, and {@code z}, if
-     *     {@code x.equals(y)} returns {@code true} and
-     *     {@code y.equals(z)} returns {@code true}, then
-     *     {@code x.equals(z)} should return {@code true}.
+     * {@code x}, {@code y}, and {@code z}, if
+     * {@code x.equals(y)} returns {@code true} and
+     * {@code y.equals(z)} returns {@code true}, then
+     * {@code x.equals(z)} should return {@code true}.
      * <li>It is <i>consistent</i>: for any non-null reference values
-     *     {@code x} and {@code y}, multiple invocations of
-     *     {@code x.equals(y)} consistently return {@code true}
-     *     or consistently return {@code false}, provided no
-     *     information used in {@code equals} comparisons on the
-     *     objects is modified.
+     * {@code x} and {@code y}, multiple invocations of
+     * {@code x.equals(y)} consistently return {@code true}
+     * or consistently return {@code false}, provided no
+     * information used in {@code equals} comparisons on the
+     * objects is modified.
      * <li>For any non-null reference value {@code x},
-     *     {@code x.equals(null)} should return {@code false}.
+     * {@code x.equals(null)} should return {@code false}.
      * </ul>
      * <p>
      * The {@code equals} method for class {@code Object} implements
@@ -251,19 +352,25 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>, Bin
      * general contract for the {@code hashCode} method, which states
      * that equal objects must have equal hash codes.
      *
-     * @param   obj   the reference object with which to compare.
-     * @return  {@code true} if this object is the same as the obj
-     *          argument; {@code false} otherwise.
-     * @see     #hashCode()
-     * @see     java.util.HashMap
+     * @param obj the reference object with which to compare.
+     * @return {@code true} if this object is the same as the obj
+     * argument; {@code false} otherwise.
+     * @see #hashCode()
+     * @see java.util.HashMap
      */
     @Override
     public boolean equals(Object obj) {
+        if (obj instanceof LinkedBinarySearchTree) {
+            LinkedBinarySearchTree<K, V> tree = (LinkedBinarySearchTree<K, V>) obj;
+            //TODO solve upper line.
+            return this.isEmpty() && tree.isEmpty() || Objects.equals(this.root.left, tree.root.left);
+        }
         return false;
-        //TODO method equals
     }
 
-    private Pair<K, V> toPair(Node<K, V> node){
+    private Pair<K, V> toPair(Node<K, V> node) {
         return new Pair<>(node.key, node.value);
     }
+
+
 }

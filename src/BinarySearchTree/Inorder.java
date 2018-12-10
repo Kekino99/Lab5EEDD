@@ -5,6 +5,7 @@ import Stack.LinkedStack;
 import java.util.ArrayList;
 
 public class Inorder {
+    //TODO second way of doing as the LBST implements an InOrder iterable.
     //TODO javadoc and Tests
     public static <K, V> ArrayList<Pair<K, V>> inorder(LinkedBinarySearchTree<K, V> tree) {
         ArrayList<Pair<K, V>> array = new ArrayList<>();
@@ -20,6 +21,7 @@ public class Inorder {
                 stack.push(new Pair<>(actual.first().right(), false));
                 stack.push(new Pair<>(actual.first(), true));
                 stack.push(new Pair<>(actual.first().left(), false));
+                //TODO solve when the element pushed doesn't exist
             }
         }
         return array;
