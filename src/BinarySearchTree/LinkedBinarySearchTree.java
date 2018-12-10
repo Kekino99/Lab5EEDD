@@ -3,13 +3,13 @@ package BinarySearchTree;
 import java.util.Comparator;
 
 /**
- * Makes a "unstable" binary search tree.
+ * Makes a "unpermutable" binary search tree.
  *
  * @param <K> The key value, which will be compared and the natural way of order things.
  * @param <V> The value stored in the binary Tree. Both seen as a SQL parameters k would be the primary key and v would
  *            be the values associated with that key.
  */
-public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V> {
+public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>, BinaryTree<Pair<K, V>> {
 
     private final Node<K, V> root;
     private final Comparator<K> comparator;
@@ -61,11 +61,37 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V> {
 
 
     /**
-     * @return True if the BinarySearchTree is empty, false otherwise
+     * @return True if the LinkedBinarySearchTree is empty, false otherwise
      */
     @Override
     public boolean isEmpty() {
         return root.left == null;
+    }
+
+    /**
+     * @return the element "root" of the BinaryTree.
+     */
+    @Override
+    public Pair<K, V> root() {
+        return toPair(root.left);
+    }
+
+    /**
+     * If searched a left child that doesn't exist casts a NullPointerException
+     * @return the left child
+     */
+    @Override
+    public LinkedBinarySearchTree<K, V> left() {
+        return new LinkedBinarySearchTree<>(this.comparator,root.left.left);
+    }
+
+    /**
+     * If searched a right child that doesn't exist casts a NullPointerException
+     * @return the right child
+     */
+    @Override
+    public LinkedBinarySearchTree<K, V>  right() {
+        return new LinkedBinarySearchTree<>(this.comparator,root.left.right);
     }
 
     /**
@@ -235,5 +261,9 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V> {
     public boolean equals(Object obj) {
         return false;
         //TODO method equals
+    }
+
+    private Pair<K, V> toPair(Node<K, V> node){
+        return new Pair<>(node.key, node.value);
     }
 }
