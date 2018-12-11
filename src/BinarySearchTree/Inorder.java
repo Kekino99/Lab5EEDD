@@ -10,10 +10,9 @@ import java.util.ArrayList;
 public class Inorder {
 
     /**
-     *
-     * @param tree Tree which wants to be have an inorder "path" TODO search the correct name
-     * @param <K> Parameter key value passed in the LBST parameter. Can be accessed with first()
-     * @param <V> Parameter value value passed in the LBST parameter. Can be accessed with second()
+     * @param tree Tree which wants to be have an inorder traversal
+     * @param <K>  Parameter key value passed in the LBST parameter. Can be accessed with first()
+     * @param <V>  Parameter value value passed in the LBST parameter. Can be accessed with second()
      * @return an inorder sorted arrayList of the LBST passed as a parameter.
      */
     public static <K, V> ArrayList<Pair<K, V>> inorder(LinkedBinarySearchTree<K, V> tree) {
@@ -46,6 +45,12 @@ public class Inorder {
         return false;
     }
 
+    /**
+     * @param tree Tree which wants to be have an inorder traversal
+     * @param <K>  Parameter key value passed in the LBST parameter. Can be accessed with first()
+     * @param <V>  Parameter value value passed in the LBST parameter. Can be accessed with second()
+     * @return an inorder sorted arrayList of the LBST passed as a parameter.
+     */
     public static <K, V> ArrayList<Pair<K, V>> inorder2(LinkedBinarySearchTree<K, V> tree) {
         ArrayList<Pair<K, V>> array = new ArrayList<>();
         for (Pair<K, V> pair : tree) {

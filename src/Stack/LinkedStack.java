@@ -5,11 +5,11 @@ import java.util.NoSuchElementException;
 public class LinkedStack<E> implements Stack<E> {
     private Node<E> head;
 
-    private class Node<E> {
-        E elem;
-        Node<E> next;
+    private static class Node<T> {
+        T elem;
+        Node<T> next;
 
-        private Node(E elem, Node<E> next) {
+        private Node(T elem, Node<T> next) {
             this.elem = elem;
             this.next = next;
         }
