@@ -84,6 +84,7 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>, Bin
         }
 
         /**
+         * Unsupported Operation, java docs from interface Iterator
          * Removes from the underlying collection the last element returned
          * by this iterator (optional operation).  This method can be called
          * only once per call to {@link #next}.
@@ -108,7 +109,6 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>, Bin
         @Override
         public void remove() throws UnsupportedOperationException {
             throw new UnsupportedOperationException();
-            //TODO remove operation
         }
     }
 
@@ -142,8 +142,8 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>, Bin
         @Override
         public boolean equals(Object obj) {
             if (obj instanceof Node) {
-                Node<K, V> node = (Node<K, V>) obj; //TODO solve as the equals of LBST.
-                return this.key == node.key && this.value == node.value
+                Node<?, ?> node = (Node<?, ?>) obj;
+                return Objects.equals(this.key,node.key) && Objects.equals(this.value, node.value)
                         && Objects.equals(this.left, node.left)
                         && Objects.equals(this.right, node.right);
             }
@@ -371,8 +371,8 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>, Bin
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof LinkedBinarySearchTree) {
-            LinkedBinarySearchTree<K, V> tree = (LinkedBinarySearchTree<K, V>) obj;
-            //TODO solve upper line.
+            LinkedBinarySearchTree<?, ?> tree = (LinkedBinarySearchTree<?, ?>) obj;
+
             return this.isEmpty() && tree.isEmpty() || Objects.equals(this.root.left, tree.root.left);
         }
         return false;
