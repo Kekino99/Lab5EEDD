@@ -7,8 +7,10 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
+//TODO project: revise javaDocs.
+
 /**
- * Makes a "unpermutable" binary search tree.
+ * Makes a immutable binary search tree.
  *
  * @param <K> The key value, which will be compared and the natural way of order things.
  * @param <V> The value stored in the binary Tree. Both seen as a SQL parameters k would be the primary key and v would
@@ -31,9 +33,9 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>, Bin
 
     private class Iter implements Iterator<Pair<K, V>> {
         /* Self notes of the implementation:
-        * There is no need of a modCount as the class is not permutable
-        * Remove method is tricky, as the tree is unpermutable but it can be done
-        * with auxiliar methods -I think- , so it will be implemented.*/
+         * There is no need of a modCount as the class is not mutable
+         * Remove method is tricky, as the tree is immutable but it can be done
+         * with auxiliar methods -I think- , so it will be implemented.*/
         //TODO final last check this comment to make sense with the code.
         LinkedStack<Pair<LinkedBinarySearchTree<K, V>, Boolean>> stack;
         Pair<K, V> lastReturned = null;
@@ -47,7 +49,14 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>, Bin
          */
         @Override
         public boolean hasNext() {
-            return !stack.isEmpty();
+            while (!stack.isEmpty()) { //TODO study if the while does anything
+                if (stack.top().first().isEmpty()) {
+                    stack.pop();
+                } else {
+                    return true;
+                }
+            }
+            return false;
         }
 
         /**
@@ -57,17 +66,18 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>, Bin
          * @throws NoSuchElementException if the iteration has no more elements
          */
         @Override
-        public Pair<K, V> next() throws NoSuchElementException{
-            while(hasNext()) {
+        public Pair<K, V> next() throws NoSuchElementException {
+            while (hasNext()) {
                 Pair<LinkedBinarySearchTree<K, V>, Boolean> actual = stack.top();
                 stack.pop();
-                if(actual.second()) {
-                    return actual.first().root();
-                } else {
-                    stack.push(new Pair<>(actual.first().right(), false));
-                    stack.push(new Pair<>(actual.first(), true));
-                    stack.push(new Pair<>(actual.first().left(), false));
-                    //TODO solve as Inorder java class doc.
+                if (!actual.first().isEmpty()) {
+                    if (actual.second()) {
+                        return actual.first().root();
+                    } else {
+                        stack.push(new Pair<>(actual.first().right(), false));
+                        stack.push(new Pair<>(actual.first(), true));
+                        stack.push(new Pair<>(actual.first().left(), false));
+                    }
                 }
             }
             throw new NoSuchElementException();
@@ -131,7 +141,7 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>, Bin
 
         @Override
         public boolean equals(Object obj) {
-            if(obj instanceof Node) {
+            if (obj instanceof Node) {
                 Node<K, V> node = (Node<K, V>) obj; //TODO solve as the equals of LBST.
                 return this.key == node.key && this.value == node.value
                         && Objects.equals(this.left, node.left)

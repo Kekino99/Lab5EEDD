@@ -4,15 +4,24 @@ import Stack.LinkedStack;
 
 import java.util.ArrayList;
 
+/**
+ * Contains useful static methods to make an inorder ArrayList from a LBST passed as a parameter
+ */
 public class Inorder {
-    //TODO second way of doing as the LBST implements an InOrder iterable.
-    //TODO javadoc and Tests
+
+    /**
+     *
+     * @param tree Tree which wants to be have an inorder "path" TODO search the correct name
+     * @param <K> Parameter key value passed in the LBST parameter. Can be accessed with first()
+     * @param <V> Parameter value value passed in the LBST parameter. Can be accessed with second()
+     * @return an inorder sorted arrayList of the LBST passed as a parameter.
+     */
     public static <K, V> ArrayList<Pair<K, V>> inorder(LinkedBinarySearchTree<K, V> tree) {
         ArrayList<Pair<K, V>> array = new ArrayList<>();
         LinkedStack<Pair<LinkedBinarySearchTree<K, V>, Boolean>> stack
                 = new LinkedStack<Pair<LinkedBinarySearchTree<K, V>, Boolean>>();
         stack.push(new Pair<>(tree, false));
-        while(!stack.isEmpty()) {
+        while(hasNext(stack)) {
             Pair<LinkedBinarySearchTree<K, V>, Boolean> actual = stack.top();
             stack.pop();
             if(actual.second()) {
@@ -21,9 +30,28 @@ public class Inorder {
                 stack.push(new Pair<>(actual.first().right(), false));
                 stack.push(new Pair<>(actual.first(), true));
                 stack.push(new Pair<>(actual.first().left(), false));
-                //TODO solve when the element pushed doesn't exist
             }
         }
         return array;
     }
+
+    private static <K, V> boolean hasNext(LinkedStack<Pair<LinkedBinarySearchTree<K, V>, Boolean>> stack) {
+        while(!stack.isEmpty()){
+            if(stack.top().first().isEmpty()){
+                stack.pop();
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static <K, V> ArrayList<Pair<K, V>> inorder2(LinkedBinarySearchTree<K, V> tree) {
+        ArrayList<Pair<K, V>> array = new ArrayList<>();
+        for (Pair<K, V> pair : tree) {
+            array.add(pair);
+        }
+        return array;
+    }
+
 }

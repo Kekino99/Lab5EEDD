@@ -26,4 +26,5 @@ public interface BinaryTree<E> {
      */
     BinaryTree<E> right();
 
+
 }
