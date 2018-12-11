@@ -7,7 +7,9 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
-//TODO project: revise javaDocs.
+/* TODO project: revise javaDocs.
+ * TODO Ask about retyping a method from an Interface or inherited class
+ */
 
 /**
  * Makes a immutable binary search tree.
@@ -143,7 +145,7 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>, Bin
         public boolean equals(Object obj) {
             if (obj instanceof Node) {
                 Node<?, ?> node = (Node<?, ?>) obj;
-                return Objects.equals(this.key,node.key) && Objects.equals(this.value, node.value)
+                return Objects.equals(this.key, node.key) && Objects.equals(this.value, node.value)
                         && Objects.equals(this.left, node.left)
                         && Objects.equals(this.right, node.right);
             }
@@ -232,7 +234,7 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>, Bin
      * @return returns the BinarySearchTree with the pair of values added.
      */
     @Override
-    public BinarySearchTree<K, V> put(K key, V value) {
+    public LinkedBinarySearchTree<K, V> put(K key, V value) {
         return new LinkedBinarySearchTree<>(this.comparator, putting(root.left, key, value));
     }
 
@@ -243,7 +245,7 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>, Bin
      * hadn't had the value it should return the same BinarySearchTree
      */
     @Override
-    public BinarySearchTree<K, V> remove(K key) {
+    public LinkedBinarySearchTree<K, V> remove(K key) {
         if (containsKey(key)) {
             return new LinkedBinarySearchTree<>(comparator, removing(root.left, key));
         } else {
@@ -380,6 +382,16 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>, Bin
 
     private Pair<K, V> toPair(Node<K, V> node) {
         return new Pair<>(node.key, node.value);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder st = new StringBuilder();
+        for (Pair<K, V> kvPair : this) {
+            st.append(kvPair.second()).append(", ");
+        }
+        return st.toString();
+
     }
 
 
