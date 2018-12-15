@@ -1,5 +1,7 @@
 package BinarySearchTree;
 
+import java.util.Objects;
+
 /**
  * Makes a two paired elements objects. It's immutable
  *
@@ -31,5 +33,21 @@ public class Pair<S, T> {
      */
     public T second() {
         return second;
+    }
+
+    @Override
+    public String toString() {
+        return "(" + first.toString() + ", " +second.toString() + ")";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Pair) {
+            Pair<?, ?> pair = (Pair<?, ?>) obj;
+            return Objects.equals(this.first, pair.first)
+                    && Objects.equals(this.second, pair.second);
+        } else {
+            return false;
+        }
     }
 }

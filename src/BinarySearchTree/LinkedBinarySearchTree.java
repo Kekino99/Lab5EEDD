@@ -33,14 +33,13 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>, Bin
         return new Iter();
     }
 
-    private class Iter implements Iterator<Pair<K, V>> {
+    public class Iter implements Iterator<Pair<K, V>> {
         /* Self notes of the implementation:
          * There is no need of a modCount as the class is not mutable
          * Remove method is tricky, as the tree is immutable but it can be done
          * with auxiliar methods -I think- , so it will be implemented.*/
         //TODO final last check this comment to make sense with the code.
         LinkedStack<Pair<LinkedBinarySearchTree<K, V>, Boolean>> stack;
-        Pair<K, V> lastReturned = null;
 
         /**
          * Returns {@code true} if the iteration has more elements.
@@ -112,6 +111,12 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>, Bin
         public void remove() throws UnsupportedOperationException {
             throw new UnsupportedOperationException();
         }
+
+        Iter() {
+            this.stack = new LinkedStack<Pair<LinkedBinarySearchTree<K, V>, Boolean>>();
+            if (!LinkedBinarySearchTree.this.isEmpty())
+                this.stack.push(new Pair<>(LinkedBinarySearchTree.this, false));
+        }
     }
 
     private static class Node<K, V> {
@@ -139,17 +144,6 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>, Bin
 
         private boolean hasRightChild() {
             return this.right != null;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (obj instanceof Node) {
-                Node<?, ?> node = (Node<?, ?>) obj;
-                return Objects.equals(this.key, node.key) && Objects.equals(this.value, node.value)
-                        && Objects.equals(this.left, node.left)
-                        && Objects.equals(this.right, node.right);
-            }
-            return false;
         }
 
     }
@@ -213,6 +207,7 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>, Bin
      */
     @Override
     public boolean containsKey(K key) {
+        Node<?,?> ki = nodePosition(key);
         return nodePosition(key) != null;
 
     }
@@ -258,7 +253,7 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>, Bin
             return new Node<>(key, value, null, null);
         } else if (node.key == key) {
             return new Node<>(key, value, node.left, node.right);
-        } else if (comparator.compare(node.key, key) < 0) {
+        } else if (comparator.compare(node.key, key) > 0) {
             return new Node<>(node.key, node.value, putting(node.left, key, value), node.right);
         } else {
             return new Node<>(node.key, node.value, node.left, putting(node.right, key, value));
@@ -279,7 +274,7 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>, Bin
             } else {
                 return null;
             }
-        } else if (comparator.compare(node.key, key) < 0) {
+        } else if (comparator.compare(node.key, key) > 0) {
             return new Node<>(node.key, node.value, removing(node.left, key), node.right);
         } else {
             return new Node<>(node.key, node.value, node.left, removing(node.right, key));
@@ -291,10 +286,10 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>, Bin
 
     /**
      * @param key the key that wants to be searched.
-     * @return Returns the node that contein the key. If key i not initialitzated it will return null.
+     * @return Returns the node that contains the key. If the key was not initialized it will return null.
      */
     private Node<K, V> nodePosition(K key) {
-        Node<K, V> actual = navigate(root.left, key);
+        Node<K, V> actual = root.left;
 
         while (actual != null && actual.key != key) {
             actual = navigate(actual, key);
@@ -313,7 +308,7 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>, Bin
      * @return returns the nearest node of the left or right node
      */
     private Node<K, V> navigate(Node<K, V> node, K key) {
-        return (comparator.compare(node.key, key) < 0) ? root.left : root.right;
+        return (comparator.compare(node.key, key) > 0) ? node.left : node.right;
     }
 
     private Node<K, V> maxOfNode(Node<K, V> node) {
@@ -374,10 +369,20 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>, Bin
     public boolean equals(Object obj) {
         if (obj instanceof LinkedBinarySearchTree) {
             LinkedBinarySearchTree<?, ?> tree = (LinkedBinarySearchTree<?, ?>) obj;
-
-            return this.isEmpty() && tree.isEmpty() || Objects.equals(this.root.left, tree.root.left);
+            return equals(this.root.left, tree.root.left);
         }
         return false;
+    }
+
+    private boolean equals(Node<K, V> node1, Node<?, ?> node2) {
+        if (node1 != null && node2 != null) {
+            return Objects.equals(node1.key, node2.key)
+                    && Objects.equals(node1.value, node2.value)
+                    && equals(node1.left, node2.left)
+                    && equals(node1.right, node2.right);
+        } else {
+            return node1 == null && node2 == null;
+        }
     }
 
     private Pair<K, V> toPair(Node<K, V> node) {
@@ -388,10 +393,9 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>, Bin
     public String toString() {
         StringBuilder st = new StringBuilder();
         for (Pair<K, V> kvPair : this) {
-            st.append(kvPair.second()).append(", ");
+            st.append(kvPair).append(", ");
         }
         return st.toString();
-
     }
 
 
