@@ -12,7 +12,6 @@ import static org.junit.Assert.*;
 
 public class LinkedBinarySearchTreeTest {
 
-    //TODO some methods and some lines of code are not fully tested: add tests.
     @org.junit.Test
     public void iterator() {
         //Inorder in a BST should return an ordered keys  list iterator. So I'm planning on using a random BST

@@ -10,7 +10,6 @@ import static org.junit.Assert.*;
 public class LinkedStackTest {
 
     //TODO add @Before method with stack (all methods use it)
-    //TODO add NoSuchElementException tests
     @Test
     public void isEmpty() {
         LinkedStack<Integer> stack = new LinkedStack<Integer>();
