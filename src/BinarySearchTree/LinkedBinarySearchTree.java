@@ -36,9 +36,8 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>, Bin
     public class Iter implements Iterator<Pair<K, V>> {
         /* Self notes of the implementation:
          * There is no need of a modCount as the class is not mutable
-         * Remove method is tricky, as the tree is immutable but it can be done
-         * with auxiliar methods -I think- , so it will be implemented.*/
-        //TODO final last check this comment to make sense with the code.
+         * Remove method is tricky, as the tree is immutable so it can't be done.
+         */
         LinkedStack<Pair<LinkedBinarySearchTree<K, V>, Boolean>> stack;
 
         /**
