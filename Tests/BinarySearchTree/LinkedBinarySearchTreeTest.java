@@ -3,7 +3,6 @@ package BinarySearchTree;
 import org.junit.Assert;
 import org.junit.Test;
 
-import javax.swing.text.html.HTMLDocument;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;

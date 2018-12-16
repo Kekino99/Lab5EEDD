@@ -207,7 +207,6 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>, Bin
      */
     @Override
     public boolean containsKey(K key) {
-        Node<?,?> ki = nodePosition(key);
         return nodePosition(key) != null;
 
     }
