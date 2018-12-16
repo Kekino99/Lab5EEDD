@@ -3,6 +3,8 @@ package Stack;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.NoSuchElementException;
+
 import static org.junit.Assert.*;
 
 public class LinkedStackTest {
@@ -82,4 +84,17 @@ public class LinkedStackTest {
         }
         assertNotEquals(stack, "Patata");
     }
+
+    @org.junit.Test(expected = NoSuchElementException.class)
+    public void stackErrorUnexpectedPopTest() throws NoSuchElementException {
+        LinkedStack<Integer> stack1 = new LinkedStack<Integer>();
+        stack1.pop();
+    }
+
+    @org.junit.Test(expected = NoSuchElementException.class)
+    public void stackErrorTopTest() throws NoSuchElementException {
+        LinkedStack<Integer> stack1 = new LinkedStack<Integer>();
+        stack1.top();
+    }
+
 }

@@ -3,8 +3,10 @@ package BinarySearchTree;
 import org.junit.Assert;
 import org.junit.Test;
 
+import javax.swing.text.html.HTMLDocument;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Random;
 
 import static org.junit.Assert.*;
@@ -32,6 +34,22 @@ public class LinkedBinarySearchTreeTest {
                 Assert.fail();
             }
         }
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void noElementIterator() throws NoSuchElementException {
+        LinkedBinarySearchTree<Integer, String> tree =
+                new LinkedBinarySearchTree<Integer, String>(Comparator.naturalOrder());
+        Iterator<Pair<Integer, String>> iter = tree.iterator();
+        iter.next();
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void iteratorRemove() throws UnsupportedOperationException {
+        LinkedBinarySearchTree<Integer, String> tree =
+                new LinkedBinarySearchTree<Integer, String>(Comparator.naturalOrder());
+        Iterator<Pair<Integer, String>> iter = tree.iterator();
+        iter.remove();
     }
 
     @org.junit.Test
@@ -199,6 +217,40 @@ public class LinkedBinarySearchTreeTest {
         assertNotEquals(tree1, tree2);
         tree2 = tree2.remove(3);
         assertEquals(tree1, tree2);
+        tree1 = tree2;
+        tree2 = tree2.remove(200);
+        if(tree1 != tree2) { //I want to know that they are exactly the same object, not a "clone".
+            Assert.fail();
+        }
+        tree2 = tree2.put(6, "aaa");
+        tree2 = tree2.put(9, "aab");
+        tree2 = tree2.put(8, "aba");
+        tree2 = tree2.put(10, "abb");
+        tree1 = tree1.remove(7);
+        tree1 = tree1.put(6, "aaa");
+        tree1 = tree1.put(9, "aab");
+        tree1 = tree1.put(8, "aba");
+        tree1 = tree1.put(10, "abb");
+        tree2 = tree2.remove(7);
+        assertEquals(tree1, tree2);
+        tree2 = tree1.put(3, "cba");
+        tree2 = tree2.put(-2, "000");
+        tree2 = tree2.put(4, "001");
+        tree2 = tree2.put(-1, "010");
+        tree2 = tree2.put(1, "011");
+        tree2 = tree2.put(0, "100");
+        tree1 = tree1.put(1, "011");
+        tree1 = tree1.put(-2, "000");
+        tree1 = tree1.put(-1, "010");
+        tree1 = tree1.put(0, "100");
+        tree1 = tree1.put(4, "001");
+        tree2 = tree2.remove(3);
+        assertEquals(tree1, tree2);
+        tree1 = tree1.remove(-2);
+        tree2 = tree2.remove(-2);
+        assertEquals(tree1, tree2);
+
+
     }
 
     @Test
@@ -212,5 +264,12 @@ public class LinkedBinarySearchTreeTest {
         tree = tree.put(7, "Sergi");
         tree = tree.put(6, "Se");
         assertEquals("(3, cba), (5, abc), (6, Se), (7, Sergi), ", tree.toString());
+    }
+
+    @Test
+    public void equalsTest() {
+        LinkedBinarySearchTree<Integer, String> tree =
+                new LinkedBinarySearchTree<Integer, String>(Comparator.naturalOrder());
+        assertNotEquals(tree, "Patata");
     }
 }

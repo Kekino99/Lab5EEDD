@@ -312,7 +312,7 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>, Bin
     }
 
     private Node<K, V> maxOfNode(Node<K, V> node) {
-        Node<K, V> actual = node.right;
+        Node<K, V> actual = node;
         while (actual.right != null) {
             actual = actual.right;
         }
