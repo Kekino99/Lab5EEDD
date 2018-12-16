@@ -17,13 +17,13 @@ public class PairTest {
     }
 
     @Test
-    public void same() {
+    public void equalsTest() {
         Pair<Integer, String> pair1 = new Pair<>(5, "abc");
         Pair<Integer, String> pair2 = new Pair<>(5, "abc");
         assertEquals(pair1, pair2);
         pair2 = new Pair<>(3, "cba");
         assertNotEquals(pair1, pair2);
-
+        assertNotEquals(pair1, "Patata");
     }
 
 }
