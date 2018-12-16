@@ -132,6 +132,7 @@ public class LinkedBinarySearchTreeTest {
         assertEquals("cba", tree.get(3));
         assertEquals("Sergi", tree.get(7));
         assertEquals("Se", tree.get(6));
+        assertNull(tree.get(128));
 
     }
 

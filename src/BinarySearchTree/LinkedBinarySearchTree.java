@@ -218,7 +218,8 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>, Bin
      */
     @Override
     public V get(K key) {
-        return nodePosition(key).value;
+        Node<K, V> node = nodePosition(key);
+        return (node==null) ? null : node.value;
     }
 
     /**
