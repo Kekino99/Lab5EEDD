@@ -7,8 +7,6 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
-/* TODO project: revise javaDocs.
- */
 
 /**
  * Makes a immutable binary search tree.
@@ -48,14 +46,14 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>, Bin
          */
         @Override
         public boolean hasNext() {
-            while (!stack.isEmpty()) { //TODO study if the while does anything
+            if (!stack.isEmpty()) {
                 if (stack.top().first().isEmpty()) {
                     stack.pop();
                 } else {
                     return true;
                 }
             }
-            return false;
+            return !stack.isEmpty();
         }
 
         /**
