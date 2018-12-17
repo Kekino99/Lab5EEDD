@@ -55,18 +55,6 @@ public class LinkedStackTest {
     }
 
     @Test
-    public void cloneTest() {
-        LinkedStack<Integer> stack = new LinkedStack<Integer>();
-        for (int i = 0; i < 10; i++) {
-            stack.push(i);
-        }
-        LinkedStack<Integer> clone = stack.clone();
-        if (clone == stack || clone.getClass() != stack.getClass() || !clone.equals(stack)) {
-            Assert.fail();
-        }
-    }
-
-    @Test
     public void toStringTest() {
         LinkedStack<Integer> stack = new LinkedStack<Integer>();
         for (int i = 0; i < 10; i++) {

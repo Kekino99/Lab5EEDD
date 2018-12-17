@@ -3,7 +3,7 @@ package Stack;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
-public class LinkedStack<E> implements Stack<E>, Cloneable {
+public class LinkedStack<E> implements Stack<E> {
     private Node<E> head;
 
     private static class Node<T> {
@@ -65,28 +65,13 @@ public class LinkedStack<E> implements Stack<E>, Cloneable {
         head = new Node<>(e, head);
     }
 
-
-    @Override
-    public LinkedStack<E> clone() { //TODO ask professor about super.clone() method.
-        LinkedStack<E> clone = new LinkedStack<E>();
-        clone.head = new Node<>(head.elem, this.head.next);
-        Node<E> first = clone.head;
-        while (clone.head.next != null) {
-            Node<E> temp = new Node<>(clone.head.next.elem, clone.head.next.next);
-            clone.head.next = temp;
-            clone.head = temp;
-        }
-        clone.head = first;
-        return clone;
-    }
-
     @Override
     public String toString() {
-        LinkedStack<E> stack = this.clone();
+        Node<E> node = this.head;
         StringBuilder st = new StringBuilder();
-        while (!stack.isEmpty()) {
-            st.append(stack.top().toString()).append(", ");
-            stack.pop();
+        while (node != null) {
+            st.append(node.elem.toString()).append(", ");
+            node = node.next;
         }
         return st.toString();
     }

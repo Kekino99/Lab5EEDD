@@ -8,7 +8,6 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 /* TODO project: revise javaDocs.
- * TODO Ask about retyping a method from an Interface or inherited class
  */
 
 /**
@@ -250,7 +249,7 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>, Bin
     private Node<K, V> putting(Node<K, V> node, K key, V value) {
         if (node == null) {
             return new Node<>(key, value, null, null);
-        } else if (node.key == key) {
+        } else if (node.key.equals(key)) {
             return new Node<>(key, value, node.left, node.right);
         } else if (comparator.compare(node.key, key) > 0) {
             return new Node<>(node.key, node.value, putting(node.left, key, value), node.right);
@@ -261,7 +260,7 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>, Bin
 
     // Node exists, as it checks before calling the function.
     private Node<K, V> removing(Node<K, V> node, K key) {
-        if (node.key == key) {
+        if (node.key.equals(key)) {
             if (node.hasBothChild()) {
                 Node<K, V> maximum = maxOfNode(node.left);
                 Node<K, V> removed = removing(node.left, maximum.key);
@@ -290,7 +289,7 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>, Bin
     private Node<K, V> nodePosition(K key) {
         Node<K, V> actual = root.left;
 
-        while (actual != null && actual.key != key) {
+        while (actual != null && !actual.key.equals(key)) {
             actual = navigate(actual, key);
         }
 
