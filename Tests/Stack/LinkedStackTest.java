@@ -1,6 +1,7 @@
 package Stack;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.NoSuchElementException;
@@ -8,15 +9,17 @@ import java.util.NoSuchElementException;
 import static org.junit.Assert.*;
 
 public class LinkedStackTest {
+    LinkedStack<Integer> stack = new LinkedStack<Integer>();
 
-    //TODO add @Before method with stack (all methods use it)
-    @Test
-    public void isEmpty() {
-        LinkedStack<Integer> stack = new LinkedStack<Integer>();
-        assertTrue(stack.isEmpty());
+    @Before
+    public void initStack() {
         for (int i = 0; i < 10; i++) {
             stack.push(i);
         }
+    }
+
+    @Test
+    public void isEmpty() {
         for (int i = 0; i < 10; i++) {
             assertFalse(stack.isEmpty());
             stack.pop();
@@ -26,10 +29,6 @@ public class LinkedStackTest {
 
     @Test
     public void topPop() {
-        LinkedStack<Integer> stack = new LinkedStack<Integer>();
-        for (int i = 0; i < 10; i++) {
-            stack.push(i);
-        }
         for (int i = 9; i >= 0; i--) {
             assertEquals(Integer.valueOf(i), stack.top());
             stack.pop();
@@ -38,10 +37,6 @@ public class LinkedStackTest {
 
     @Test
     public void push() {
-        LinkedStack<Integer> stack = new LinkedStack<Integer>();
-        for (int i = 0; i < 10; i++) {
-            stack.push(i);
-        }
         LinkedStack<Integer> stack1 = new LinkedStack<Integer>();
         for (int i = 0; i < 10; i++) {
             stack1.push(i);
@@ -56,19 +51,11 @@ public class LinkedStackTest {
 
     @Test
     public void toStringTest() {
-        LinkedStack<Integer> stack = new LinkedStack<Integer>();
-        for (int i = 0; i < 10; i++) {
-            stack.push(i);
-        }
         assertEquals("9, 8, 7, 6, 5, 4, 3, 2, 1, 0, ", stack.toString());
     }
 
     @Test
-    public void equalsTest() { //Tests if compared with another object fails and doesn't break
-        LinkedStack<Integer> stack = new LinkedStack<Integer>();
-        for (int i = 0; i < 10; i++) {
-            stack.push(i);
-        }
+    public void equalsTest() { //Tests if compared with another object fails and doesn't breakº
         assertNotEquals(stack, "Patata");
     }
 
