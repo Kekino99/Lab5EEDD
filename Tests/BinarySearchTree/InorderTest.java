@@ -14,6 +14,46 @@ public class InorderTest {
 
     @Test
     public void inorder() {
+        LinkedBinarySearchTree<Integer, String> tree =
+                new LinkedBinarySearchTree<Integer, String>(Comparator.naturalOrder());
+
+        tree = tree.put(5, "abc");
+        tree = tree.put(3, "cba");
+        tree = tree.put(7, "Sergi");
+        tree = tree.put(6, "Se");
+        ArrayList<Pair<Integer, String>> inorder = Inorder.inorder(tree);
+        Iterator<Pair<Integer, String>> iter = inorder.iterator();
+        Pair<Integer, String> last = iter.next();
+        while (iter.hasNext()) {
+            Pair<Integer, String> actual = iter.next();
+            if (actual.first() <= last.first()) {
+                Assert.fail();
+            }
+        }
+    }
+
+    @Test
+    public void inorder2() {
+        LinkedBinarySearchTree<Integer, String> tree =
+                new LinkedBinarySearchTree<Integer, String>(Comparator.naturalOrder());
+
+        tree = tree.put(5, "abc");
+        tree = tree.put(3, "cba");
+        tree = tree.put(7, "Sergi");
+        tree = tree.put(6, "Se");
+        ArrayList<Pair<Integer, String>> inorder = Inorder.inorder2(tree);
+        Iterator<Pair<Integer, String>> iter = inorder.iterator();
+        Pair<Integer, String> last = iter.next();
+        while (iter.hasNext()) {
+            Pair<Integer, String> actual = iter.next();
+            if (actual.first() <= last.first()) {
+                Assert.fail();
+            }
+        }
+    }
+
+    @Test
+    public void inorder3() {
         //Inorder in a BST should return an ordered keys  list iterator. So I'm planning on using a random BST
         //creator of 20 element to see if the list is sorted. Value is not important, so it will be all "".
         LinkedBinarySearchTree<Integer, String> tree =
@@ -37,7 +77,7 @@ public class InorderTest {
     }
 
     @Test
-    public void inorder2() {
+    public void inorder4() {
         //Inorder in a BST should return an ordered keys  list iterator. So I'm planning on using a random BST
         //creator of 20 element to see if the list is sorted. Value is not important, so it will be all "".
         LinkedBinarySearchTree<Integer, String> tree =

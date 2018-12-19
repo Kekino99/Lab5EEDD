@@ -271,4 +271,18 @@ public class LinkedBinarySearchTreeTest {
                 new LinkedBinarySearchTree<Integer, String>(Comparator.naturalOrder());
         assertNotEquals(tree, "Patata");
     }
+
+    @Test(expected = NullPointerException.class)
+    public void leftEmpty() throws NullPointerException {
+        LinkedBinarySearchTree<Integer, String> tree =
+                new LinkedBinarySearchTree<Integer, String>(Comparator.naturalOrder());
+        tree.left();
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void rightEmpty() throws NullPointerException {
+        LinkedBinarySearchTree<Integer, String> tree =
+                new LinkedBinarySearchTree<Integer, String>(Comparator.naturalOrder());
+        tree.right();
+    }
 }

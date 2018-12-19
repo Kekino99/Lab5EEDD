@@ -17,32 +17,24 @@ public class Inorder {
      */
     public static <K, V> ArrayList<Pair<K, V>> inorder(LinkedBinarySearchTree<K, V> tree) {
         ArrayList<Pair<K, V>> array = new ArrayList<>();
-        LinkedStack<Pair<LinkedBinarySearchTree<K, V>, Boolean>> stack
-                = new LinkedStack<Pair<LinkedBinarySearchTree<K, V>, Boolean>>();
-        stack.push(new Pair<>(tree, false));
-        while(hasNext(stack)) {
-            Pair<LinkedBinarySearchTree<K, V>, Boolean> actual = stack.top();
+        LinkedStack<LinkedBinarySearchTree<K, V>> stack
+                = new LinkedStack<LinkedBinarySearchTree<K, V>>();
+        pushLeft(stack, tree);
+        while(!stack.isEmpty()) {
+            LinkedBinarySearchTree<K, V> actual = stack.top();
             stack.pop();
-            if(actual.second()) {
-                array.add(actual.first().root());
-            } else {
-                stack.push(new Pair<>(actual.first().right(), false));
-                stack.push(new Pair<>(actual.first(), true));
-                stack.push(new Pair<>(actual.first().left(), false));
-            }
+            pushLeft(stack, actual.right());
+            array.add(actual.root());
         }
         return array;
     }
 
-    private static <K, V> boolean hasNext(LinkedStack<Pair<LinkedBinarySearchTree<K, V>, Boolean>> stack) {
-        while(!stack.isEmpty()){
-            if(stack.top().first().isEmpty()){
-                stack.pop();
-            } else {
-                return true;
-            }
+    private static <K, V> void pushLeft(LinkedStack<LinkedBinarySearchTree<K, V>> stack, LinkedBinarySearchTree<K, V> tree) {
+        LinkedBinarySearchTree<K, V> actual = tree;
+        while(!actual.isEmpty()) {
+            stack.push(actual);
+            actual = actual.left();
         }
-        return false;
     }
 
     /**
