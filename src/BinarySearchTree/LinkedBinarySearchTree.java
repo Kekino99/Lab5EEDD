@@ -258,17 +258,16 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>,
      */
     @Override
     public LinkedBinarySearchTree<K, V> remove(K key) {
-        if (key != null) {
-            if (containsKey(key)) {
-                return new LinkedBinarySearchTree<>(comparator, removing(root, key));
-                //contains key returns false always to a void tree,
-                // so it won't cast NullPointerException
-            } else {
-                return this;
-            }
-        } else {
+        if (key == null) {
             throw new NullPointerException("Key is null");
+        } else if (containsKey(key)) {
+            return new LinkedBinarySearchTree<>(comparator, removing(root, key));
+            //contains key returns false always to a void tree,
+            // so it won't cast NullPointerException
+        } else {
+            return this;
         }
+
     }
 
     private Node<K, V> putting(Node<K, V> node, K key, V value) {
