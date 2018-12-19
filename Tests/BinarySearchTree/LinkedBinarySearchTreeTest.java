@@ -285,4 +285,33 @@ public class LinkedBinarySearchTreeTest {
                 new LinkedBinarySearchTree<Integer, String>(Comparator.naturalOrder());
         tree.right();
     }
+
+    @Test(expected = NullPointerException.class)
+    public void rootEmpty() throws NullPointerException {
+        LinkedBinarySearchTree<Integer, String> tree =
+                new LinkedBinarySearchTree<Integer, String>(Comparator.naturalOrder());
+        tree.root();
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void putKeyNull() throws NullPointerException {
+        LinkedBinarySearchTree<Integer, String> tree =
+                new LinkedBinarySearchTree<Integer, String>(Comparator.naturalOrder());
+        tree.put(null, "abc");
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void putValueNull() throws NullPointerException {
+        LinkedBinarySearchTree<Integer, String> tree =
+                new LinkedBinarySearchTree<Integer, String>(Comparator.naturalOrder());
+        tree.put(5, null);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void removeKeyNull() throws NullPointerException {
+        LinkedBinarySearchTree<Integer, String> tree =
+                new LinkedBinarySearchTree<Integer, String>(Comparator.naturalOrder());
+        tree.remove( null);
+    }
+
 }
