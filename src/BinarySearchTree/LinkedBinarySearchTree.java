@@ -37,7 +37,7 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>,
          * There is no need of a modCount as the class is not mutable
          * Remove method is tricky, as the tree is immutable so it can't be done.
          */
-        LinkedStack<LinkedBinarySearchTree<K, V>> stack;
+        LinkedStack<Node<K, V>> stack;
 
         /**
          * Returns {@code true} if the iteration has more elements.
@@ -61,20 +61,20 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>,
         public Pair<K, V> next() throws NoSuchElementException {
 
             if (hasNext()) {
-                LinkedBinarySearchTree<K, V> actual = stack.top();
+                Node<K, V> actual = stack.top();
                 stack.pop();
-                pushLeft(actual.right());
-                return actual.root();
+                pushLeft(actual.right);
+                return new Pair<>(actual.key, actual.value);
             } else {
                 throw new NoSuchElementException();
             }
         }
 
-        private void pushLeft(LinkedBinarySearchTree<K, V> tree) {
-            LinkedBinarySearchTree<K, V> actual = tree;
-            while (!actual.isEmpty()) {
+        private void pushLeft(Node<K, V> node) {
+            Node<K, V> actual = node;
+            while (actual != null) {
                 stack.push(actual);
-                actual = actual.left();
+                actual = actual.left;
             }
         }
 
@@ -107,8 +107,8 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>,
         }
 
         Iter() {
-            stack = new LinkedStack<LinkedBinarySearchTree<K, V>>();
-            pushLeft(LinkedBinarySearchTree.this);
+            stack = new LinkedStack<Node<K, V>>();
+            pushLeft(LinkedBinarySearchTree.this.root);
         }
 
 
@@ -261,10 +261,9 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>,
         if (key == null) {
             throw new NullPointerException("Key is null");
         } else {
-            Node<K, V> node1 = removing(root, key);
-            if(node1 != root) {
+            try {
                 return new LinkedBinarySearchTree<>(comparator, removing(root, key));
-            } else {
+            } catch (NoSuchElementException ex) {
                 return this;
             }
         }
@@ -284,10 +283,10 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>,
     }
 
     // Node exists, as it checks before calling the function.
-    private Node<K, V> removing(Node<K, V> node, K key) {
+    private Node<K, V> removing(Node<K, V> node, K key) throws NoSuchElementException {
         if (node == null) {
-            return root;
-        } if (comparator.compare(node.key, key) == 0) {
+            throw new NoSuchElementException();
+        } else if (comparator.compare(node.key, key) == 0) {
             if (node.hasBothChild()) {
                 Node<K, V> maximum = maxOfNode(node.left);
                 Node<K, V> removed = removing(node.left, maximum.key);
@@ -300,19 +299,10 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>,
                 return null;
             }
         } else if (comparator.compare(node.key, key) > 0) {
-            Node<K, V> node1 =  removing(node.left, key);
-            if(node1 != root) {
-                return new Node<>(node.key, node.value, node1 , node.right);
-            } else {
-                return root;
-            }
+            return new Node<>(node.key, node.value, removing(node.left, key), node.right);
         } else {
-            Node<K, V> node1 = removing(node.right, key);
-            if (node1 != root) {
-                return new Node<>(node.key, node.value, node.left, node1);
-            } else {
-                return root;
-            }
+            return new Node<>(node.key, node.value, node.left, removing(node.right, key));
+
         }
     }
 
