@@ -217,7 +217,7 @@ public class LinkedBinarySearchTreeTest {
         tree2 = tree2.remove(3);
         assertEquals(tree1, tree2);
         tree1 = tree2;
-        tree2 = tree2.remove(200);
+        tree2 = tree2.remove(6);
         if(tree1 != tree2) { //I want to know that they are exactly the same object, not a "clone".
             Assert.fail();
         }

@@ -260,12 +260,13 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>,
     public LinkedBinarySearchTree<K, V> remove(K key) {
         if (key == null) {
             throw new NullPointerException("Key is null");
-        } else if (containsKey(key)) {
-            return new LinkedBinarySearchTree<>(comparator, removing(root, key));
-            //contains key returns false always to a void tree,
-            // so it won't cast NullPointerException
         } else {
-            return this;
+            Node<K, V> node1 = removing(root, key);
+            if(node1 != root) {
+                return new LinkedBinarySearchTree<>(comparator, removing(root, key));
+            } else {
+                return this;
+            }
         }
 
     }
@@ -284,7 +285,9 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>,
 
     // Node exists, as it checks before calling the function.
     private Node<K, V> removing(Node<K, V> node, K key) {
-        if (comparator.compare(node.key, key) == 0) {
+        if (node == null) {
+            return root;
+        } if (comparator.compare(node.key, key) == 0) {
             if (node.hasBothChild()) {
                 Node<K, V> maximum = maxOfNode(node.left);
                 Node<K, V> removed = removing(node.left, maximum.key);
@@ -297,9 +300,19 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>,
                 return null;
             }
         } else if (comparator.compare(node.key, key) > 0) {
-            return new Node<>(node.key, node.value, removing(node.left, key), node.right);
+            Node<K, V> node1 =  removing(node.left, key);
+            if(node1 != root) {
+                return new Node<>(node.key, node.value, node1 , node.right);
+            } else {
+                return root;
+            }
         } else {
-            return new Node<>(node.key, node.value, node.left, removing(node.right, key));
+            Node<K, V> node1 = removing(node.right, key);
+            if (node1 != root) {
+                return new Node<>(node.key, node.value, node.left, node1);
+            } else {
+                return root;
+            }
         }
     }
 
