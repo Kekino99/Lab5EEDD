@@ -32,7 +32,7 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>,
         return new Iter();
     }
 
-    public class Iter implements Iterator<Pair<K, V>> {
+    private class Iter implements Iterator<Pair<K, V>> {
         /* Self notes of the implementation:
          * There is no need of a modCount as the class is not mutable
          * Remove method is tricky, as the tree is immutable so it can't be done.
