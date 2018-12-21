@@ -302,7 +302,6 @@ public class LinkedBinarySearchTree<K, V> implements BinarySearchTree<K, V>,
             return new Node<>(node.key, node.value, removing(node.left, key), node.right);
         } else {
             return new Node<>(node.key, node.value, node.left, removing(node.right, key));
-
         }
     }
 
